@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Optimizing JavaScript Loops with Typed Arrays
+title: Optimizing JavaScript with Typed Arrays
 date: 2024-11-24
 ---
 
