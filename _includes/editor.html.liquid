@@ -1,0 +1,18 @@
+<div class="editor">
+  <div class="editor-content" style="height: {{include.height }};" id="editor-{{ include.id }}">{{ include.content }}</div>
+  {% if include.showButton %}
+    <button class="editor-button" onclick="runCode('{{ include.id }}')">
+      Run Code
+    </button>
+  {% endif %}
+  <pre class="editor-result" id="output-{{ include.id }}"></pre>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const editor = ace.edit("editor-{{ include.id }}");
+      editor.setTheme("ace/theme/tomorrow_night");
+      editor.session.setMode(
+        "ace/mode/{{ include.language | default: 'javascript' }}"
+      );
+    });
+  </script>
+</div>
