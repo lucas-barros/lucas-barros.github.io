@@ -47,6 +47,10 @@ minima:
         platform: stackoverflow,
         user_url: "https://stackoverflow.com/users/3008506/lucas-araujo",
       }
+    - {
+        platform: cv,
+        user_url: "https://drive.google.com/file/d/1_ibzMpL43eiYUiroiiap02DBhFfzNJ8K/view",
+      }
 
     # Exclude from processing.
     # The following items will not be processed, by default.
