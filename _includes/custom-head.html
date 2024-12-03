@@ -1,17 +1,3 @@
+<script type="module" src="/wasm/pkg/sum_wasm.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    window.runCode = (id) => {
-      const editor = ace.edit("editor-" + id);
-      const code = editor.getValue();
-      const outputElement = document.getElementById("output-" + id);
-      try {
-        outputElement.textContent = "";
-        const result = eval(code);
-        outputElement.textContent = result ?? "Code executed successfully.";
-      } catch (error) {
-        outputElement.textContent = `Error: ${error.message}`;
-      }
-    };
-  });
-</script>
+<script src="/js/ace-editor.js"></script>
