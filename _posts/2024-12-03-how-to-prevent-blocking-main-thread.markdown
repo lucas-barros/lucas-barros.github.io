@@ -5,16 +5,17 @@ date: 2024-12-03
 ---
 
 When working with JavaScript, one of the first concepts we encounter is that it operates on a **single-threaded event loop** model.
-This is not necessarily a limitation of the language it self, but it's how most browsers and NodeJs environment implement it.
+This is not necessarily a limitation of the language itself, but it's how most browsers and NodeJs environment implement it.
 
 When synchronous tasks, like a large loop, dominate the thread, the event loop is unable to process any other pending tasks, like user input, network responses, or animations.
-This results might in a "blocked" user interface where the browser might appear frozen or unresponsive.
+This might result in a "blocked" user interface where the browser might appear frozen or unresponsive.
 This blog will focus on the browser environment, but the suggested techniques will work similarly in NodeJs environment.
 
 We will use this simple function that adds all numbers from a value as an example.
 Running this function for large values of `n` can freeze your application.
-You can test this for yourself by running the code bellow.
+You can test this for yourself by running the code below.
 
+### Initial solution
 {% include editor.html.liquid id="blocking" language="javascript" height="150px" showButton=true content=
 "function sum(n) {
   let sum = 0n;
@@ -28,7 +29,7 @@ You can test this for yourself by running the code bellow.
 sum(100000000n);"%}
 
 As you can see, it makes the page unusable until the computation completes.
-But don't worry, there are several techniques to handle such cases gracefully. Let's explore them!
+Fortunately, there are several techniques to handle such cases gracefully. Let's explore them!
 
 ---
 
@@ -36,8 +37,8 @@ But don't worry, there are several techniques to handle such cases gracefully. L
 
 The `setTimeout` function can be used to break a large computation into smaller pieces, allowing the event loop to handle other tasks, like UI updates, between chunks. It will move the remaining work to a separate task that will be queued for subsequent execution.
 
-Here's the refactored example:
 
+### Refactored code with setTimeout
 {% include editor.html.liquid id="timeout" language="javascript" height="480px" showButton=true content=
 "function chunkSum(start, end) {
   let sum = 0n;
@@ -133,8 +134,7 @@ The upside for this approach is that the main function remains unchanged. The do
 
 The `yield` method of the `Scheduler` interface allows a task to yield control to the main thread and resume execution later, with the continuation scheduled as a prioritized task. 
 
-Here's the refactored example:
-
+### Refactored code with yield
 {% include editor.html.liquid id="yield" language="javascript" height="400px" showButton=true content=
 "function chunkSum(start, end) {
   let sum = 0n;
@@ -164,9 +164,17 @@ async function sum(n) {
 
 sum(100000000n);"%}
 
-Unlike the `setTimeout` approach, `Scheduler.yield()` ensures that the remaining work is placed at the front of the queue rather than the back. This prioritization allows deferred tasks to resume promptly, minimizing the risk of delays caused by lower-priority tasks. As a result, execution time is optimized.
+Unlike the `setTimeout` approach, `Scheduler.yield()` ensures that the remaining work is placed at the front of the queue rather than the back. This prioritization allows deferred tasks to resume promptly, minimizing the risk of delays caused by lower-priority tasks. As a result, execution time is optimized. The Scheduler API is relatively new, some browsers might not support it yet.
 
 
 ## Conclusion
 
-Blocking the main thread is a common pitfall in JavaScript, but with the techniques discussed here you can avoid this problem while maintaining a smooth user experience.
+Blocking the main thread is a common pitfall in JavaScript that can severely degrade user experience by freezing the browser and making your application unresponsive.
+
+Fortunately, JavaScript provides several solutions to this issue, each tailored to specific scenarios:
+
+- Task chunking with setTimeout: A browser-compatible method for breaking tasks into smaller, non-blocking parts.
+- Web Workers: A straightforward way to offload heavy computations to a separate thread.
+- Scheduler.yield: A modern API for optimizing task execution while maintaining UI responsiveness.
+
+Understanding these techniques and when to apply them helps ensure your applications remain fast and responsive.
